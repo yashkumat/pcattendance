@@ -1,0 +1,488 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+  <title>Pavitra Classes Attendance</title>
+  <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Nunito:wght@500;700;800&display=swap">
+  <style>
+    :root {
+      --bg: #f3f5fa;
+      --card: #fff;
+      --ink: #14213d;
+      --mute: #5d6a85;
+      --line: #dbe1ee;
+      --pres: #e3f6e8;
+      --presb: #2e9e55;
+      --presi: #14532d;
+      --abs: #fde4e4;
+      --absb: #d23c3c;
+      --absi: #7f1d1d;
+      --accent: #14213d;
+      --onaccent: #fff;
+      --wa: #1faa59;
+      box-sizing: border-box;
+      padding-top: env(safe-area-inset-top, 0px);
+      padding-bottom: env(safe-area-inset-bottom, 0px)
+    }
+
+    @media (prefers-color-scheme:dark) {
+      :root {
+        --bg: #0d1424;
+        --card: #16203a;
+        --ink: #eef2fb;
+        --mute: #9aa8c7;
+        --line: #27345a;
+        --pres: #12301f;
+        --presb: #3fbf6c;
+        --presi: #bff0cf;
+        --abs: #3a1717;
+        --absb: #ef5b5b;
+        --absi: #ffd0d0;
+        --accent: #eef2fb;
+        --onaccent: #14213d
+      }
+    }
+
+    * {
+      box-sizing: border-box;
+      -webkit-tap-highlight-color: transparent
+    }
+
+    html,
+    body {
+      margin: 0
+    }
+
+    body {
+      background: var(--bg);
+      color: var(--ink);
+      font-family: "Nunito", system-ui, -apple-system, "Segoe UI", Roboto, sans-serif;
+      min-height: 100vh
+    }
+
+    .back {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 12px;
+      height: 32px;
+      padding: 0 14px;
+      font: inherit;
+      font-weight: 600;
+      font-size: 12px;
+      cursor: pointer;
+      margin: 0 16px 0 0;
+    }
+
+    .wrap {
+      max-width: 720px;
+      margin: 0 auto;
+      padding: 16px 14px 130px
+    }
+
+    h1 {
+      font-size: 22px;
+      margin: 0;
+      font-weight: 800;
+      line-height: 1.2
+    }
+
+    .sub {
+      color: var(--mute);
+      font-size: 14px;
+      font-weight: 700;
+      margin: 2px 0 14px
+    }
+
+    /* class cards that collapse into a navbar */
+    .classes {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 12px
+    }
+
+    .cls {
+      background: var(--card);
+      border: 2px solid var(--line);
+      border-radius: 18px;
+      padding: 18px 14px;
+      text-align: left;
+      font: inherit;
+      color: var(--ink);
+      cursor: pointer;
+      min-height: 112px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      transition: min-height .25s, padding .25s, border-radius .25s
+    }
+
+    .cls b {
+      font-size: 30px;
+      font-weight: 800;
+      line-height: 1;
+      transition: font-size .25s;
+      white-space: nowrap
+    }
+
+    .cls .cnt {
+      font-size: 14px;
+      color: var(--mute);
+      font-weight: 700
+    }
+
+    .cls .tag {
+      display: inline-block;
+      margin-top: 6px;
+      padding: 3px 9px;
+      border-radius: 99px;
+      font-size: 13px;
+      font-weight: 800
+    }
+
+    .tag.ok {
+      background: var(--pres);
+      color: var(--presi)
+    }
+
+    .tag.no {
+      background: var(--abs);
+      color: var(--absi)
+    }
+
+    .cls .badge {
+      display: none
+    }
+
+    .classes.compact {
+      display: flex;
+      gap: 8px;
+      overflow-x: auto;
+      position: sticky;
+      top: env(safe-area-inset-top, 0px);
+      z-index: 4;
+      background: var(--bg);
+      padding: 8px 0;
+      margin: 0 0 10px;
+      scrollbar-width: none;
+      border-bottom: 1px solid var(--line)
+    }
+
+    .classes.compact::-webkit-scrollbar {
+      display: none
+    }
+
+    .classes.compact .cls {
+      min-height: 0;
+      padding: 8px 16px;
+      border-radius: 99px;
+      flex-direction: row;
+      align-items: center;
+      gap: 8px;
+      flex: 0 0 auto
+    }
+
+    .classes.compact .cls b {
+      font-size: 16px
+    }
+
+    .classes.compact .cnt,
+    .classes.compact .tag {
+      display: none
+    }
+
+    .classes.compact .cls .badge {
+      display: inline-block;
+      min-width: 22px;
+      text-align: center;
+      padding: 1px 7px;
+      border-radius: 99px;
+      background: var(--absb);
+      color: #fff;
+      font-size: 12px;
+      font-weight: 800
+    }
+
+    .classes.compact .cls.on {
+      background: var(--accent);
+      border-color: var(--accent);
+      color: var(--onaccent)
+    }
+
+    .cls:active,
+    .stu:active {
+      transform: scale(.97)
+    }
+
+    /* students */
+    .stat {
+      display: flex;
+      gap: 8px;
+      margin: 0 0 12px;
+      flex-wrap: wrap;
+      align-items: center
+    }
+
+    .stat span {
+      padding: 6px 12px;
+      border-radius: 99px;
+      font-weight: 800;
+      font-size: 14px
+    }
+
+    .stat .p {
+      background: var(--pres);
+      color: var(--presi)
+    }
+
+    .stat .a {
+      background: var(--abs);
+      color: var(--absi)
+    }
+
+    .mini {
+      border: 1px solid var(--line);
+      background: var(--card);
+      color: var(--ink);
+      border-radius: 99px;
+      padding: 6px 12px;
+      font: inherit;
+      font-weight: 700;
+      font-size: 13px;
+      cursor: pointer
+    }
+
+    .grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(150px, 1fr));
+      gap: 10px
+    }
+
+    .stu {
+      border: 2px solid var(--presb);
+      background: var(--pres);
+      color: var(--presi);
+      border-radius: 16px;
+      padding: 12px 10px;
+      font: inherit;
+      text-align: left;
+      cursor: pointer;
+      min-height: 84px;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      gap: 6px;
+      transition: background .12s, border-color .12s
+    }
+
+    .stu .n {
+      font-weight: 800;
+      font-size: 16px;
+      line-height: 1.2
+    }
+
+    .stu .r {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      font-size: 12px;
+      font-weight: 700;
+      opacity: .85
+    }
+
+    .stu .s {
+      font-weight: 800;
+      font-size: 13px;
+      opacity: 1
+    }
+
+    .stu.abs {
+      border-color: var(--absb);
+      background: var(--abs);
+      color: var(--absi)
+    }
+
+    .stu.abs .n {
+      text-decoration: line-through;
+      text-decoration-thickness: 2px
+    }
+
+    .bar {
+      position: fixed;
+      left: 0;
+      right: 0;
+      bottom: 0;
+      background: var(--bg);
+      border-top: 1px solid var(--line);
+      padding: 10px 14px calc(10px + env(safe-area-inset-bottom, 0px))
+    }
+
+    .bar>div {
+      max-width: 720px;
+      margin: 0 auto;
+      display: flex
+    }
+
+    .send {
+      flex: 1;
+      border: 0;
+      border-radius: 16px;
+      background: var(--wa);
+      color: #fff;
+      font: inherit;
+      font-weight: 800;
+      font-size: 18px;
+      min-height: 56px;
+      cursor: pointer
+    }
+
+    .send:disabled {
+      opacity: .45
+    }
+
+    .toast {
+      position: fixed;
+      left: 50%;
+      top: calc(14px + env(safe-area-inset-top, 0px));
+      transform: translateX(-50%);
+      background: var(--accent);
+      color: var(--onaccent);
+      padding: 10px 16px;
+      border-radius: 12px;
+      font-weight: 700;
+      font-size: 14px;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity .2s;
+      z-index: 6;
+      max-width: 90%
+    }
+
+    .toast.on {
+      opacity: 1
+    }
+
+    button:focus-visible {
+      outline: 3px solid var(--accent);
+      outline-offset: 2px
+    }
+
+    @media (prefers-reduced-motion:reduce) {
+      * {
+        transition: none !important
+      }
+    }
+  </style>
+</head>
+
+<body>
+  <div class="wrap">
+
+    <h1 style="display: flex; align-items: center; margin-bottom: 12px;"><button class="back" id="back" hidden
+        aria-label="Back to classes">‹
+        Back</button> Pavitra Classes </h1>
+    <div class="sub" id="sub"></div>
+    <div class="classes" id="classes"></div>
+    <div id="list" hidden>
+      <div class="stat"><span class="p" id="cp"></span><span class="a" id="ca"></span>
+        <button class="mini" id="allp">All present</button>
+      </div>
+      <div class="grid" id="grid"></div>
+    </div>
+  </div>
+  <div class="bar">
+    <div id="barin"></div>
+  </div>
+  <div class="toast" id="toast"></div>
+  <script>
+    var RAW = "Arnav Dharankar|PC-2026-003|10;Dhruv Sharma|PC-2026-015|10;Kaveri Bhamre|PC-2026-009|10;Khanak Picha|PC-2026-014|10;Nikhil Patil|PC-2026-028|10;Nishika Lunawat|PC-2026-013|10;Parth Satpute|PC-2026-011|10;Pradnya Raka|PC-2026-019|10;Rishika Baberwal|PC-2026-012|10;Shivam Shinde|PC-2026-030|10;Tanish Rupawate|PC-2026-010|10;Vedant Musale|PC-2026-008|10;Yavhi Bagmar|PC-2026-004|10;Nihar Deepak Gaikwad|PC-2026-034|9;Abhijeet Santosh Katkale|PC-2026-033|8;Hardik Tathed|PC-2026-029|8;Prathamesh Dharankar|PC-2026-031|8;Sangram Bhagat|PC-2026-018|8;Aditya Khatale|PC-2026-035|9;Arohi Chordiya|PC-2026-001|9;Ayush Vishwakarma|PC-2026-036|9;Chaturthi Parakh|PC-2026-022|9;Devang Bedmutha|PC-2026-026|9;Harshit Picha|PC-2026-025|9;Janvhi Khatale|PC-2026-027|9;Kaustubh Nandre|PC-2026-024|9;Khush Khiwansara|PC-2026-037|9;Labdhi Nahata|PC-2026-006|9;Manasvi Surana|PC-2026-005|9;Parikshit Baberwal|PC-2026-023|9;Sangram Jadhav|PC-2026-007|9;Shaurya Shinde|PC-2026-002|9";
+    var S = RAW.split(";").map(function (r) { var p = r.split("|"); return { name: p[0], id: p[1], cls: p[2] } });
+    var CLASSES = ["8", "9", "10"];
+    var now = new Date();
+    var DATE = now.toLocaleDateString("en-IN", { weekday: "long", day: "numeric", month: "short", year: "numeric" });
+    var KEY = "pc-att-" + now.getFullYear() + "-" + (now.getMonth() + 1) + "-" + now.getDate();
+    var abs = {}, touched = {}, cur = null;
+    try { var sv = JSON.parse(localStorage.getItem(KEY) || "{}"); abs = sv.abs || {}; touched = sv.touched || {} } catch (e) { }
+    function save() { try { localStorage.setItem(KEY, JSON.stringify({ abs: abs, touched: touched })) } catch (e) { } }
+    function $(id) { return document.getElementById(id) }
+    function inCls(c) { return S.filter(function (s) { return s.cls === c }) }
+    function absIn(c) { return inCls(c).filter(function (s) { return abs[s.id] }) }
+    function toast(t) { var el = $("toast"); el.textContent = t; el.className = "toast on"; clearTimeout(toast.t); toast.t = setTimeout(function () { el.className = "toast" }, 2400) }
+
+    /* Class cards: big on the home screen, collapsed into a navbar once a class is open */
+    function drawClasses() {
+      var box = $("classes");
+      box.className = "classes" + (cur ? " compact" : "");
+      box.innerHTML = CLASSES.map(function (c) {
+        var a = absIn(c).length;
+        var tag = touched[c] ? '<div class="tag ' + (a ? "no" : "ok") + '">' + (a ? a + " absent" : "All present") + "</div>" : "";
+        return '<button class="cls' + (c === cur ? " on" : "") + '" data-c="' + c + '" aria-label="Class ' + c + '"><b>Class ' + c + '</b><span class="cnt">' + inCls(c).length + ' students</span>' + tag + (a ? '<span class="badge">' + a + "</span>" : "") + "</button>"
+      }).join("");
+      box.querySelectorAll(".cls").forEach(function (b) {
+        b.onclick = function () {
+          if (b.dataset.c === cur) goHome(); else openClass(b.dataset.c)
+        }
+      });
+    }
+    function goHome() {
+      $("back").hidden = true;
+      cur = null; $("list").hidden = true; $("sub").textContent = DATE + " · choose a class";
+      drawClasses(); drawBar(); window.scrollTo(0, 0);
+    }
+    function openClass(c) {
+      $("back").hidden = false;
+      cur = c; touched[c] = true; save();
+      $("list").hidden = false; $("sub").textContent = DATE + " · tap a card to mark absent";
+      drawClasses(); drawStudents(); drawBar();
+      var on = document.querySelector(".cls.on"); if (on && on.scrollIntoView) on.scrollIntoView({ inline: "center", block: "nearest" });
+    }
+    $("back").onclick = goHome;
+    function drawStudents() {
+      var st = inCls(cur), a = absIn(cur).length;
+      $("cp").textContent = (st.length - a) + " present"; $("ca").textContent = a + " absent";
+      $("grid").innerHTML = st.map(function (s) {
+        var x = abs[s.id];
+        return '<button class="stu' + (x ? " abs" : "") + '" data-id="' + s.id + '" aria-pressed="' + (!!x) + '"><span class="n">' + s.name + '</span><span class="r"><span>' + s.id.replace("PC-2026-", "#") + '</span><span class="s">' + (x ? "Absent" : "Present") + "</span></span></button>"
+      }).join("");
+      $("grid").querySelectorAll(".stu").forEach(function (b) {
+        b.onclick = function () {
+          var id = b.dataset.id; if (abs[id]) delete abs[id]; else abs[id] = 1; save(); drawStudents(); drawClasses()
+        }
+      });
+    }
+    $("allp").onclick = function () { inCls(cur).forEach(function (s) { delete abs[s.id] }); save(); drawStudents(); drawClasses() };
+
+    function drawBar() {
+      if (cur) {
+        $("barin").innerHTML = '<button class="send" id="send">Send Class ' + cur + ' absent list on WhatsApp</button>';
+        $("send").onclick = function () { send([cur]) };
+      } else {
+        var any = CLASSES.some(function (c) { return touched[c] });
+        $("barin").innerHTML = '<button class="send" id="sendall"' + (any ? "" : " disabled") + '>Send all classes on WhatsApp</button>';
+        $("sendall").onclick = function () { send(CLASSES.filter(function (c) { return touched[c] })) };
+      }
+    }
+
+    /* WhatsApp message */
+    function msg(list) {
+      var out = "*Pavitra Classes – Attendance*\n" + DATE + "\n";
+      list.forEach(function (c) {
+        var a = absIn(c); out += "\n*Class " + c + "*: ";
+        if (!a.length) { out += "All present ✅\n"; return }
+        out += a.length + " absent\n";
+        a.forEach(function (s, i) { out += (i + 1) + ". " + s.name + "\n" });
+      });
+      return out.trim();
+    }
+    function send(list) {
+      var text = msg(list), url = "https://wa.me/?text=" + encodeURIComponent(text), w = null;
+      try { w = window.open(url, "_blank") } catch (e) { }
+      if (!w) { try { navigator.clipboard.writeText(text); toast("Message copied. Paste it in WhatsApp.") } catch (e) { location.href = url } }
+    }
+    goHome();
+  </script>
+</body>
+
+</html>
